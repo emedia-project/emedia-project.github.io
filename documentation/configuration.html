@@ -1,0 +1,123 @@
+---
+layout: documentation
+title: Configuration
+---
+
+<p>
+The configuration file of your application is located in the <code>config</code> directory. In it you will find to files :
+<ul>
+  <li>A <code>.config</code> file in which you can modify the application configuration.</li>
+  <li>A <code>vm.args</code> file containing optionals' arguments passed to the Erlang VM.</li>
+</ul>
+</p>
+
+<h3>The <code>vm.args</code> file</h3>
+
+<p>
+  The <code>vm.args</code> is similar to the standard Erlang <code>args_file</code>. However there is a small difference. Indeed, in this file you can use environment variables. For example, if you want to load dependencies placed in a specific directory, you can use the following line :
+
+{% highlight sh %}
+-pa $BASEDIR/deps/extra/*/ebin
+{% endhighlight %}
+
+<blockquote>
+In this example, the <code>$BASEDIR</code> environment variable is automaticaly set.
+</blockquote>
+</p>
+
+<h3>The <code>.config</code> file</h3>
+
+<p>
+The <code>.config</code> file is a standard <a href="http://www.erlang.org/doc/man/config.html">Erlang configration file</a>.
+</p>
+
+<p>
+If you create an application named <code>my_app</code>, your configuration file will be <code>config/my_app.config</code> and your configuration will be in the <code>{my_app, [...]}</code> tuple.
+</p>
+
+<p>
+List of availables options:
+<table class="width">
+  <tr><th>Option</th><th>Type</th><th>Description</th><th>Default</th></tr>
+  <tr><td><code>port</code></td><td>Integer</td><td>HTTP port</td><td><code>8080</code></td></tr>
+  <tr><td><code>port_from</code></td><td>{Atom, Atom, List}</td><td>Retrieve the HTTP port to use by calling the function named by the second atom of the module (named by the first atom), using parameters specified in the list.</td><td>-</td></tr>
+  <tr><td><code>ip</code></td><td>String</td><td>Binding IP</td><td><code>"0.0.0.0"</code></td></tr>
+  <tr><td><code>ip_from</code></td><td>{Atom, Atom, List}</td><td>Retrieve the binding IP by calling the function named by the second atom of the module (named by the first atom), using parameters specified in the list.</td><td>-</td></tr>
+  <tr><td><code>max_conn</code></td><td>Integer</td><td>Maximum number of connections.</td><td><code>100</code></td></tr>
+  <tr><td><code>max_conn_from</code></td><td>{Atom, Atom, List}</td><td>Retrieve the maximum number of connections by calling the function named by the second atom of the module (named by the first atom), using parameters specified in the list.</td><td>-</td></tr>
+  <tr><td><code>ssl</code></td><td>[Tuple]</td><td>SSL configuration (see below).</td><td><code>[]</code></td></tr>
+  <tr><td><code>routes</code></td><td>[Tuple]</td><td>Custom routes (see below).</td><td><code>[]</code></td></tr>
+  <tr><td><code>plugins</code></td><td>[Atom]</td><td>Third party plugins to use (see the <a href="/documentation/plugins.html">plugin section</a> of this documentation).</td><td><code>[]</code></td></tr>
+  <tr><td><code>applications</code></td><td>[Atom]</td><td>List of application to start (via <code>application:start/1</code>) just after the start of the HTTP server.</td><td><code>[]</code></td></tr>
+  <tr><td><code>mail</code></td><td>[Tuple]</td><td>SMTP configuration (see below).</td><td><code>[{relay, "localhost"}, {port, 25}]</code></td></tr>
+</table>
+</p>
+
+<h4>Custom routes</h4>
+
+<p>
+  If you want to use a custom route for a controller, you can specify it in the <code>routes</code> section of the configuration file. Thus, if you want to access the <code>my_controller</code> controller via <code>/my/custom/path</code>, just add the following tuple in the list of the <code>routes</code>' option :
+</p>
+
+{% highlight sh %}
+{"/my/custom/path", my_controller}
+{% endhighlight %}
+
+<p>
+You can add as many route as you want. You can also specify multiple routes for a controller :
+</p>
+
+{% highlight sh %}
+[
+  {my_app, [
+    ...
+    {routes, [
+      {"/first/route", my_controller},
+      {"/second/route", my_controller}
+    ]},
+    ...
+  ]},
+  ...
+]
+{% endhighlight %}
+
+<p>
+Be aware that if you specify a same route for two different controllers, only the second one will be accessible via the given route.
+</p>
+
+<h4>Using HTTPS</h4>
+
+<p>
+To use HTTPS (instead of HTTP), you just need to specify a SLL configuration. This is done by giving the names of the certificates files and key file in the SSL section of the configuration file. In this section you can specify :
+
+<ul>
+  <li><code>cacertfile</code> PEM encoded trusted certificates file used to verify peer certificates.</li>
+  <li><code>certfile</code> PEM encoded user certificate file. May also contain the private key.</li>
+  <li><code>keyfile</code> PEM encoded private key file, if different than the certfile.</li>
+</ul>
+
+Each value of these options is a simple file name as string (ex: <code>server.crt</code>). In addition, each file must be placed in the <code>ssl</code> directory of the <code>priv</code> directory of the application.
+</p>
+
+<h4>SMTP configuration</h4>
+
+<p>
+If you want to use a <a href="/documentation/mailers.html">mailer</a> you must specify the SMTP configuration. In this section you can use the following options :
+
+<ul>
+  <li><code>relay</code>: SMTP server address.</li>
+  <li><code>port</code>: SMTP port.</li>
+  <li><code>ssl</code>: <code>true</code> if you use SMTPS, <code>false</code> otherwise.</li>
+  <li><code>username</code>: Username if SMTP authentification is needed.</li>
+  <li><code>password</code>: Password if SMTP authentification is needed.</li>
+</ul>
+</p>
+
+<div class="row">
+  <div class="col-md-6 text-left">
+    <a href="/documentation/paris_app.html">&laquo; Previous</a>
+  </div>
+  <div class="col-md-6 text-right">
+    <a href="/documentation/databases.html">Next &raquo;</a>
+  </div>
+</div>

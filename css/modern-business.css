@@ -91,3 +91,14 @@ footer {
         height: 70%;
     }
 }
+
+table.options {
+  width: 80%;
+  border-collapse: collapse;
+}
+
+table.options, td, th {
+  padding: 5px;
+  border: 1px solid black;
+}
+

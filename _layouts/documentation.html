@@ -84,8 +84,7 @@
             <a href="/documentation/configuration.html" class="list-group-item{% if page.title == "Configuration" %} active{% endif %}">Configuration</a>
             <a href="/documentation/databases.html" class="list-group-item{% if page.title == "Databases" %} active{% endif %}">Databases</a>
             <a href="/documentation/models.html" class="list-group-item{% if page.title == "Models" %} active{% endif %}">Models</a>
-            <a href="/documentation/views.html" class="list-group-item{% if page.title == "views" %} active{% endif %}">Views</a>
-            <a href="/documentation/custom_views.html" class="list-group-item{% if page.title == "Custom views" %} active{% endif %}">Custom views</a>
+            <a href="/documentation/views.html" class="list-group-item{% if page.title == "Views" %} active{% endif %}">Views</a>
             <a href="/documentation/static_pages.html" class="list-group-item{% if page.title == "Static pages" %} active{% endif %}">Static pages</a>
             <a href="/documentation/controllers.html" class="list-group-item{% if page.title == "Controllers" %} active{% endif %}">Controllers</a>
             <a href="/documentation/mailers.html" class="list-group-item{% if page.title == "Mailers" %} active{% endif %}">Mailers</a>
@@ -94,12 +93,25 @@
             <a href="/documentation/py_controllers.html" class="list-group-item{% if page.title == "Python controllers" %} active{% endif %}">Python controllers</a>
             <a href="/documentation/ex_controllers.html" class="list-group-item{% if page.title == "Elixir controllers" %} active{% endif %}">Elixir controllers</a>
             <a href="/documentation/paris_app_plugins.html" class="list-group-item{% if page.title == "Paris.app plugins" %} active{% endif %}">Paris.app plugins</a>
+            <a href="/documentation/api.html" class="list-group-item{% if page.title == "API" %} active{% endif %}">API</a>
           </div>
         </div>
         <!-- Content Column -->
         <div class="col-md-9">
           <h2>{{ page.title }}</h2>
 {{ content }}
+          <div class="row">
+            <div class="col-md-6 text-left">
+              {% if page.previous %}
+              <a href="/documentation/{{ page.previous }}.html">&laquo; Previous</a>
+              {% endif %}
+            </div>
+            <div class="col-md-6 text-right">
+              {% if page.next %}
+              <a href="/documentation/{{ page.next }}.html">Next &raquo;</a>
+              {% endif %}
+            </div>
+          </div>
         </div>
       </div>
       <!-- /.row -->

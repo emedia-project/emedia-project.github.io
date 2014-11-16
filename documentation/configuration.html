@@ -1,6 +1,8 @@
 ---
 layout: documentation
 title: Configuration
+previous: paris_app
+next: databases
 ---
 
 <p>
@@ -48,12 +50,12 @@ List of availables options:
   <tr><td><code>ssl</code></td><td>[Tuple]</td><td>SSL configuration (see below).</td><td><code>[]</code></td></tr>
   <tr><td><code>routes</code></td><td>[Tuple]</td><td>Custom routes (see below).</td><td><code>[]</code></td></tr>
   <tr><td><code>plugins</code></td><td>[Atom]</td><td>Third party plugins to use (see the <a href="/documentation/plugins.html">plugin section</a> of this documentation).</td><td><code>[]</code></td></tr>
-  <tr><td><code>applications</code></td><td>[Atom]</td><td>List of application to start (via <code>application:start/1</code>) just after the start of the HTTP server.</td><td><code>[]</code></td></tr>
+  <tr><td><code>start</code></td><td>[Tuple]</td><td>List of applications and modules to start just after the start of the HTTP server (see below).</td><td><code>[]</code></td></tr>
   <tr><td><code>mail</code></td><td>[Tuple]</td><td>SMTP configuration (see below).</td><td><code>[{relay, "localhost"}, {port, 25}]</code></td></tr>
 </table>
 </p>
 
-<h4>Custom routes</h4>
+<h3>Custom routes</h3>
 
 <p>
   If you want to use a custom route for a controller, you can specify it in the <code>routes</code> section of the configuration file. Thus, if you want to access the <code>my_controller</code> controller via <code>/my/custom/path</code>, just add the following tuple in the list of the <code>routes</code>' option :
@@ -82,10 +84,31 @@ You can add as many route as you want. You can also specify multiple routes for 
 {% endhighlight %}
 
 <p>
+You can also create "redirection route" :
+</p>
+
+{% highlight sh %}
+[
+  {my_app, [
+    ...
+    {routes, [
+      {"/my/redirect", {redirect, "/my/destination", [{"q", "value"}]}
+    ]},
+    ...
+  ]},
+  ...
+]
+{% endhighlight %}
+
+<p>
+In this example, accessing <code>/my/redirect</code> will redirect you to <code>/my/destination?q=value</code>. In the same way, <code>/my/redirect?q=custon&l=FR</code> will redirect you to <code>/my/destination?q=value&l=FR</code>.
+</p>
+
+<p>
 Be aware that if you specify a same route for two different controllers, only the second one will be accessible via the given route.
 </p>
 
-<h4>Using HTTPS</h4>
+<h3>Using HTTPS</h3>
 
 <p>
 To use HTTPS (instead of HTTP), you just need to specify a SLL configuration. This is done by giving the names of the certificates files and key file in the SSL section of the configuration file. In this section you can specify :
@@ -99,7 +122,7 @@ To use HTTPS (instead of HTTP), you just need to specify a SLL configuration. Th
 Each value of these options is a simple file name as string (ex: <code>server.crt</code>). In addition, each file must be placed in the <code>ssl</code> directory of the <code>priv</code> directory of the application.
 </p>
 
-<h4>SMTP configuration</h4>
+<h3>SMTP configuration</h3>
 
 <p>
 If you want to use a <a href="/documentation/mailers.html">mailer</a> you must specify the SMTP configuration. In this section you can use the following options :
@@ -113,11 +136,17 @@ If you want to use a <a href="/documentation/mailers.html">mailer</a> you must s
 </ul>
 </p>
 
-<div class="row">
-  <div class="col-md-6 text-left">
-    <a href="/documentation/paris_app.html">&laquo; Previous</a>
-  </div>
-  <div class="col-md-6 text-right">
-    <a href="/documentation/databases.html">Next &raquo;</a>
-  </div>
-</div>
+<h3>Start applications and modules</h3>
+
+<p>
+The <code>start</code> section of the configuration file allow you to specify applications or modules that must be started automatically after the launch of the HTTP server.
+</p>
+
+<p>
+To start and application, create a tuple <code>{application, ApplicationName}</code>, where <code>ApplicationName</code> is the name of the application. In this case, the application will be started using <code>application:start/1</code>. If you want to start the application using <code>application:ensure_all_started/1</code>, add <code>ensure</code> as third element in the tuple.
+</p>
+
+<p>
+To start a module, create a tuple <code>{module, ModuleName, Args}</code>, where <code>ModuleName</code> is the name of the module and <code>Args</code> is the list of parameters to pass to the <code>start</code> function of the module.
+</p>
+
